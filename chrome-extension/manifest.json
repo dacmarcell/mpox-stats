@@ -1,11 +1,11 @@
 {
-  "name": "Covid-19 Stats UK",
+  "name": "Dados MPOX Brasil",
   "version": "1.0.0",
-  "description": "latest covid data of UK",
+  "description": "latest mpox data of BR",
   "manifest_version": 3,
-  "author": "Sampurna Chapagain",
+  "author": "Marcell Dac",
   "action": {
     "default_popup": "index.html",
-    "default_title": "Latest Covid Report"
+    "default_title": "latest mpox data of BR"
   }
 }
