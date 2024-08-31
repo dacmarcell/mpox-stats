@@ -1,5 +1,5 @@
 export const env = {
-  DB_URL: process.env.DB_URL || 'mongodb://root:example@mongo:27017/',
+  DB_URL: process.env.DB_URL || 'mongodb://root:example@localhost:27017/',
   DB_NAME: process.env.DB_NAME || 'stats',
   collectionName: process.env.COLLECTION_NAME || 'docs',
   PORT: Number(process.env.PORT) || 3000,
