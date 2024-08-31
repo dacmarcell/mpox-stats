@@ -6,11 +6,20 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os
 import time
 
-def get_driver():
+def get_driver(download_dir):
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+
+    prefs = {
+        "download.default_directory": download_dir,  # Diretório de downloads
+        "download.prompt_for_download": False,       # Não perguntar onde salvar
+        "download.directory_upgrade": True,
+        "safebrowsing.enabled": True                 # Desativar avisos de arquivos perigosos
+    }
+
+    chrome_options.add_experimental_option("prefs", prefs)
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
@@ -21,13 +30,14 @@ def go_to_page(driver, url):
     time.sleep(2)
 
 def get_browser_download_path():
-    download_dir = "C:/Users/dacma/Downloads"
+    download_dir = "/usr/src/app/downloads"
     if not os.path.exists(download_dir):
         os.makedirs(download_dir)
     return download_dir
 
-def run_scraping():
-    driver = get_driver()
+def get_latest_file_from_downloads():
+    download_dir = get_browser_download_path()
+    driver = get_driver(download_dir)
 
     url = "https://www.gov.br/saude/pt-br/composicao/svsa/coes/monkeypox/atualizacao-dos-casos"
     go_to_page(driver, url)
@@ -45,17 +55,12 @@ def run_scraping():
     driver.get(download_link)
     time.sleep(5)
 
-    download_dir = get_browser_download_path()
-
     driver.quit()
 
-    list = []
-    for file in os.listdir(download_dir):
-        if file.endswith(".pdf"):
-            list.append(download_dir + '/' + file)
+    pdf_files = [os.path.join(download_dir, file) for file in os.listdir(download_dir) if file.endswith(".pdf")]
 
-    return list if list else None
+    if pdf_files:
+        latest_file = max(pdf_files, key=os.path.getmtime)
+        return latest_file
 
-def get_file_list_from_scrapping():
-    list = run_scraping()
-    return list
+    return None
