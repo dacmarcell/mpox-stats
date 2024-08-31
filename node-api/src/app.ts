@@ -2,20 +2,20 @@ import fastify from 'fastify'
 import jwt from 'jsonwebtoken'
 import fastifyCookie from 'fastify-cookie'
 
-import { Database } from './db'
 import { env } from './config/env'
 import { auth } from './middlewares/auth'
-
-const app = fastify()
-
-app.register(fastifyCookie)
+import { MongoClient } from 'mongodb'
 
 async function startServer() {
   try {
-    const db = Database.getInstance()
-    await db.getRepo()
-
+    const app = fastify()
     app.register(fastifyCookie)
+
+    const client = new MongoClient(env.DB_URL)
+    await client.connect()
+    const db = client.db(env.DB_NAME)
+
+    app.addHook('preHandler', auth)
 
     app.post<{ Body: { username: string; password: string } }>(
       '/login',
@@ -44,23 +44,20 @@ async function startServer() {
       }
     )
 
-    app.addHook('preHandler', auth)
-
     app.get('/data', async (_, reply) => {
       try {
-        const db = Database.getInstance()
-        const repo = db.getRepo()
-
-        const docs = await repo.find()
-        return reply.send(docs)
+        const collection = db.collection(env.collectionName)
+        const res = collection.find().limit(1).toArray()
+        return reply.send(res)
       } catch (err) {
         console.error('Failed to fetch data:', err)
         return reply.status(500).send({ error: 'Failed to fetch data' })
       }
     })
 
-    await app.listen({ port: env.PORT })
-    console.log(`Server listening on port ${env.PORT}`)
+    app.listen({ port: env.PORT }, () => {
+      console.log(`Server listening on port ${env.PORT}`)
+    })
   } catch (err) {
     console.error('Server startup error:', err)
     process.exit(1)
