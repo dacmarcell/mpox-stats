@@ -9,6 +9,10 @@ async function main() {
   const { token } = await login(payload)
   const stats = await getData(token)
 
+  if (!stats) {
+    const h4 = document.createElement('h4')
+    h4.innerHTML = 'Erro ao buscar dados'
+  }
   stats.regions.map((region) => {
     const formattedRegionState = region.state.replace(/[0-9]/g, ' ').trim()
 
