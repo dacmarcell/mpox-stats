@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import jwt from 'jsonwebtoken'
 import fastifyCookie from 'fastify-cookie'
+import fastifyCors from '@fastify/cors'
 
 import { env } from './config/env'
 import { auth } from './middlewares/auth'
@@ -10,6 +11,10 @@ async function startServer() {
   try {
     const app = fastify()
     app.register(fastifyCookie)
+    app.register(fastifyCors, {
+      credentials: true,
+      origin: 'chrome-extension://lnllofjphpapnbfiflakamhkmajllpif'
+    })
 
     const client = new MongoClient(env.DB_URL)
     await client.connect()
@@ -22,7 +27,7 @@ async function startServer() {
       (req, reply) => {
         const { username, password } = req.body
 
-        if (username === env.username && password === env.password) {
+        if (username === 'admin' && password === 'admin') {
           const token = jwt.sign({ username }, env.jwtSecret, {
             expiresIn: '30m'
           })
@@ -35,11 +40,11 @@ async function startServer() {
               maxAge: 30 * 60, // 30min
               sameSite: 'strict'
             })
-            .send({ message: 'Login successful' })
+            .send({ message: 'Login successful', token })
         } else {
-          return reply
-            .status(401)
-            .send({ message: 'Wrong username or password' })
+          return reply.status(401).send({
+            message: 'Wrong username or password'
+          })
         }
       }
     )
