@@ -47,8 +47,8 @@ async function startServer() {
     app.get('/data', async (_, reply) => {
       try {
         const collection = db.collection(env.collectionName)
-        const res = collection.find().limit(1).toArray()
-        return reply.send(res)
+        const res = await collection.find().limit(1).toArray()
+        return reply.send(res[0])
       } catch (err) {
         console.error('Failed to fetch data:', err)
         return reply.status(500).send({ error: 'Failed to fetch data' })
