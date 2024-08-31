@@ -1,6 +1,8 @@
 import { login, getData } from './requests.js'
 
 async function main() {
+  initialConfig()
+
   const payload = {
     username: 'admin',
     password: 'admin'
@@ -29,6 +31,10 @@ async function main() {
 }
 main()
 
+function initialConfig() {
+  document.getElementById('toggleTheme').addEventListener('click', toggleTheme)
+}
+
 /**
  * Insere um novo parágrafo (`<td>`) com o texto fornecido dentro
  * do elemento e adiciona dentro de um tr.
@@ -40,4 +46,17 @@ function insertInTable(text, trEl) {
   const td = document.createElement('td')
   td.innerHTML = text
   trEl.appendChild(td)
+}
+
+function toggleTheme() {
+  const body = document.querySelector('body')
+  const table = document.querySelector('table')
+
+  if (body.classList.value === 'dark') {
+    table.classList.replace('table-dark', 'table-striped')
+    body.classList.replace('dark', 'light')
+  } else {
+    table.classList.replace('table-striped', 'table-dark')
+    body.classList.replace('light', 'dark')
+  }
 }
