@@ -32,12 +32,12 @@ def filter_text(text):
       'cases_suspected': int(cases_suspected)
     })
 
-  only_obitos_text = text.split('Óbitos:')[1]
-  obitos = only_obitos_text.split(',')
+  only_obitos_text = text.split("Óbitos:")[1]
+  obitos = only_obitos_text.split(",")
 
   # Tratamento para casos onde o número de óbitos é escrito com 'e' ao invés de vírgula
   last_obitos = obitos.pop()
-  separated_last_obitos = last_obitos.split(' e ')
+  separated_last_obitos = last_obitos.split(" e ")
 
   if len(separated_last_obitos) > 1:
     obitos.extend(separated_last_obitos)
@@ -46,30 +46,30 @@ def filter_text(text):
 
   if obitos:
     obitos_data = {
-      'total_obitos': total_obitos,
-      'states_with_obitos': []
+      "total_obitos": total_obitos,
+      "states_with_obitos": []
     }
     for obito in obitos:
       separated_obito = obito.strip().split(' ')
       obito_quantity = int(separated_obito[0])
       obito_state = ' '.join(separated_obito[1:])
 
-      obitos_data['states_with_obitos'].append({
-        'state': obito_state,
-        'obitos': obito_quantity
+      obitos_data["states_with_obitos"].append({
+        "state": obito_state,
+        "obitos": obito_quantity
       })
 
     date_match = re.search(date_pattern, text)
     if date_match:
       date_data = {
-        'date': date_match.group(1),
-        'time': date_match.group(2)
+        "date": date_match.group(1),
+        "time": date_match.group(2)
       }
 
     return {
-      'regions': regions,
-      'obitos': obitos_data,
-      'last_update': date_data
+      "regions": regions,
+      "obitos": obitos_data,
+      "last_update": date_data
     }
 
 def read_pdf(pdf_path):
