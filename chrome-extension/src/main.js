@@ -13,29 +13,31 @@ async function main() {
     const h4 = document.createElement('h4')
     h4.innerHTML = 'Erro ao buscar dados'
   }
+
   stats.regions.map((region) => {
     const formattedRegionState = region.state.replace(/[0-9]/g, ' ').trim()
 
-    dynamicInsertion(formattedRegionState, 'region')
-    dynamicInsertion(region.cases_confirmed, 'confirmedCases')
-    dynamicInsertion(region.cases_suspected, 'suspectedCases')
+    const tbody = document.getElementById('body')
+    const tr = document.createElement('tr')
+
+    insertInTable(formattedRegionState, tr)
+    insertInTable(region.cases_confirmed, tr)
+    insertInTable(region.cases_suspected, tr)
+
+    tbody.appendChild(tr)
   })
 }
 main()
 
 /**
- * Insere um novo parágrafo (`<p>`) com o texto fornecido dentro do elemento com o ID especificado.
+ * Insere um novo parágrafo (`<td>`) com o texto fornecido dentro
+ * do elemento e adiciona dentro de um tr.
  *
- * @param {string} text - O texto que será inserido no novo parágrafo.
- * @param {string} elementID - O ID do elemento HTML no qual o novo parágrafo será adicionado.
- *
- * @example
- * // Insere um parágrafo com o texto 'Olá, mundo!' no elemento com o ID 'container'
- * dynamicInsertion('Olá, mundo!', 'container');
+ * @param {string} text - O texto que será inserido no novo td.
+ * @param {HTMLElement} trEl - Elemento tr que será inserido na tabela.
  */
-function dynamicInsertion(text, elementID) {
-  const p = document.createElement('p')
-  p.value = text
-  p.innerHTML = text
-  document.getElementById(elementID).appendChild(p)
+function insertInTable(text, trEl) {
+  const td = document.createElement('td')
+  td.innerHTML = text
+  trEl.appendChild(td)
 }
