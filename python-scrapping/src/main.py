@@ -1,14 +1,19 @@
-from scraping import get_file_list_from_scrapping
+from scraping import get_latest_file_from_downloads
 from pdf import read_pdf
-from rabbit_mq import connect, send_to_queue
+from database import save
 import schedule
+import time
 
 def run():
-  file_list = get_file_list_from_scrapping()
-  if file_list:
-    for file in file_list:
+  file = get_latest_file_from_downloads()
+  if file:
       text = read_pdf(file)
-      send_to_queue(connect(), text)
+      save(text)
 
 if __name__ == "__main__":
+  run()
   schedule.every(1).week.do(run)
+
+  while True:
+    schedule.run_pending()
+    time.sleep(1)
