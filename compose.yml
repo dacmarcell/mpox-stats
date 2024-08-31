@@ -21,7 +21,7 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
       ME_CONFIG_BASICAUTH: false
 
-  app:
+  python-scraping:
     build: ./python-scrapping
     container_name: python-app
     working_dir: /usr/src/app
@@ -36,3 +36,23 @@ services:
       - MONGO_PORT=27017
       - MONGO_USER=root
       - MONGO_PASS=example
+
+  node-api:
+    build: ./node-api
+    container_name: node-api
+    working_dir: /usr/src/app
+    volumes:
+      - ./node-api:/usr/src/app
+    command: npm run dev
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+      - MONGO_USER=root
+      - MONGO_PASS=example
+
+volumes:
+  mongo-data:
