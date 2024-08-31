@@ -13,10 +13,10 @@ def get_driver(download_dir):
     chrome_options.add_argument("--disable-dev-shm-usage")
 
     prefs = {
-        "download.default_directory": download_dir,  # Diretório de downloads
-        "download.prompt_for_download": False,       # Não perguntar onde salvar
+        "download.default_directory": download_dir,
+        "download.prompt_for_download": False,
         "download.directory_upgrade": True,
-        "safebrowsing.enabled": True                 # Desativar avisos de arquivos perigosos
+        "safebrowsing.enabled": True
     }
 
     chrome_options.add_experimental_option("prefs", prefs)
