@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
-
 import { env } from '../config/env'
 import { JwtPayload } from '../types'
 
@@ -9,20 +8,16 @@ export async function auth(req: FastifyRequest, reply: FastifyReply) {
     return
   }
 
-  const token = req.cookies.token
+  const authorization =
+    req.headers['authorization']?.split(' ')[1] || req.cookies.token
 
-  if (!token) {
-    reply.status(401).send({ message: 'Unauthorized' })
+  if (!authorization) {
+    return reply.status(401).send({ message: 'Unauthorized' })
   }
 
   try {
-    jwt.verify(token, env.jwtSecret, (err, decoded) => {
-      if (err) {
-        return reply.status(401).send({ message: 'Invalid token' })
-      }
-
-      req.user = decoded as JwtPayload
-    })
+    const decoded = jwt.verify(authorization, env.jwtSecret) as JwtPayload
+    req.user = decoded
   } catch (err) {
     return reply.status(401).send({ message: 'Invalid token' })
   }
