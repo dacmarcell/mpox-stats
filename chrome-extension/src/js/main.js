@@ -26,8 +26,6 @@ export function insertInTable(text, trEl) {
 export function verifyThemeAndApply() {
   const theme = localStorage.getItem('theme')
 
-  console.log('theme', theme)
-
   if (theme === 'dark') {
     applyDarkTheme(
       document.querySelector('body'),
