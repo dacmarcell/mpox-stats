@@ -1,5 +1,10 @@
-import { insertInTable } from './main.js'
+import { insertInTable, verifyThemeAndApply } from './main.js'
 import { login, getData } from './requests.js'
+
+document.addEventListener('DOMContentLoaded', () => {
+  main()
+  verifyThemeAndApply()
+})
 
 async function main() {
   const payload = {
@@ -31,4 +36,3 @@ async function main() {
     tbody.appendChild(tr)
   })
 }
-main()
