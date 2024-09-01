@@ -1,7 +1,7 @@
-function main() {
+document.addEventListener('DOMContentLoaded', () => {
   initialConfig()
-}
-main()
+  verifyThemeAndApply()
+})
 
 function initialConfig() {
   document.getElementById('toggleTheme').addEventListener('click', toggleTheme)
@@ -20,14 +20,40 @@ export function insertInTable(text, trEl) {
   trEl.appendChild(td)
 }
 
+/**
+ * Verifica o tema atual e aplica.
+ */
+export function verifyThemeAndApply() {
+  const theme = localStorage.getItem('theme')
+
+  console.log('theme', theme)
+
+  if (theme === 'dark') {
+    applyDarkTheme(
+      document.querySelector('body'),
+      document.querySelector('table')
+    )
+    localStorage.setItem('theme', 'dark')
+  } else {
+    applyLightTheme(
+      document.querySelector('body'),
+      document.querySelector('table')
+    )
+    localStorage.setItem('theme', 'light')
+  }
+}
+
 function toggleTheme() {
+  const theme = localStorage.getItem('theme')
   const body = document.querySelector('body')
   const table = document.querySelector('table')
 
-  if (body.classList.contains('dark')) {
+  if (theme === 'dark') {
     applyLightTheme(body, table)
+    localStorage.setItem('theme', 'light')
   } else {
     applyDarkTheme(body, table)
+    localStorage.setItem('theme', 'dark')
   }
 }
 
