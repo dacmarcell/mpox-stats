@@ -5,7 +5,7 @@
   "manifest_version": 3,
   "author": "Marcell Dac",
   "action": {
-    "default_popup": "src/html/index.html",
+    "default_popup": "src/html/cases.html",
     "default_title": "latest mpox data of BR"
   }
 }
