@@ -7,6 +7,14 @@ import { env } from './config/env'
 import { auth } from './middlewares/auth'
 import { MongoClient } from 'mongodb'
 
+export const routes = {
+  /* GET */
+  data: '/data',
+  health: '/health',
+  /* POST */
+  login: '/login'
+}
+
 async function startServer() {
   try {
     const app = fastify()
@@ -22,8 +30,12 @@ async function startServer() {
 
     app.addHook('preHandler', auth)
 
+    app.get(routes.health, (_, reply) => {
+      return reply.send({ message: 'Server is up and running' })
+    })
+
     app.post<{ Body: { username: string; password: string } }>(
-      '/login',
+      routes.login,
       (req, reply) => {
         const { username, password } = req.body
 
@@ -49,7 +61,7 @@ async function startServer() {
       }
     )
 
-    app.get('/data', async (_, reply) => {
+    app.get(routes.data, async (_, reply) => {
       try {
         const collection = db.collection(env.collectionName)
         const res = await collection.find().limit(1).toArray()

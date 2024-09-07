@@ -2,9 +2,10 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
 import { env } from '../config/env'
 import { JwtPayload } from '../types'
+import { routes } from '../app'
 
 export async function auth(req: FastifyRequest, reply: FastifyReply) {
-  if (req.url === '/login') {
+  if (req.url === routes.login || req.url === routes.health) {
     return
   }
 
