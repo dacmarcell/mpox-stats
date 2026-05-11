@@ -3,8 +3,8 @@ import os
 
 def save(text):
     try:
-        mongo_user = os.getenv("MONGO_USER")
-        mongo_pass = os.getenv("MONGO_PASS")
+        mongo_user = os.getenv("MONGO_USER", "admin")
+        mongo_pass = os.getenv("MONGO_PASS", "secretpassword")
         mongo_host = os.getenv("MONGO_HOST", "localhost")
         mongo_port = os.getenv("MONGO_PORT", "27017")
 
